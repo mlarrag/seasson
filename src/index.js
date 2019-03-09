@@ -1,12 +1,57 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import SeasonDisplay from './SeasonDispley';
+import Spinner from './Spiner';
+import useLocation from './useLocation';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+const App = () => {
+ 
+    const[lat, errorMessage] = useLocation();
+    
+    let content;
+    if(errorMessage){
+        content= <div>Error:{errorMessage}</div>;
+    } else if (lat){
+        content= <SeasonDisplay lat ={lat}/>;
+    } else {
+        content = <Spinner message="accept location"/>;
+    }
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: http://bit.ly/CRA-PWA
-serviceWorker.unregister();
+    return <div className="border red">{content}</div>;
+};
+
+ReactDOM.render(<App/>, document.querySelector('#root'))
+
+// class App extends React.Component{
+//     state = { lat: null, errorMessage: '' };
+    
+//     componentDidMount(){
+//         window.navigator.geolocation.getCurrentPosition(
+//             position => this.setState({ lat: position.coords.latitude }),
+//             err => this.setState({errorMessage: err.message})
+//             );
+//     }
+
+//     renderContent (){
+//         if(this.state.errorMessage && !this.state.lat){
+//             return <div> Error: {this.state.errorMessage}</div>;
+//         }
+
+//         if (!this.state.errorMessage && this.state.lat){
+//             return <SeasonDisplay lat = {this.state.lat} />
+
+//         }
+
+//         return <Spinner message="accept location"/>;
+
+//     }
+//     // siempre definir render
+//     render(){     
+//            return(
+//             <div className='border red'>
+//             {this.renderContent()}
+//             </div>
+//            );
+//     }
+
+// }
